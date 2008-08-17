@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'captcha'
-  s.version = '1.0.1'
+  s.version = '1.0.2'
   s.date    = '2008-08-16'
   
   s.summary     = "A simple captcha generator for Rails"
@@ -12,10 +12,11 @@ Gem::Specification.new do |s|
   
   s.has_rdoc = false
   
-  s.files = %w(
+  s.files = Dir[*%w(
     init.rb
     lib/*
     lib/**/*
     README.markdown
-    resources/*)
+    resources/*
+  )]
 end
