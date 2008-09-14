@@ -1,7 +1,7 @@
 captcha
 =======
 
-A Google-style captcha generator for Rails.
+A Google-style captcha generator for Rails. Rmagick required.
 
 
 Install
