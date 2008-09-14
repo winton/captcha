@@ -1,23 +1,21 @@
 captcha
 =======
 
-A simple captcha generator for Rails.
-
-
-How it works
-------------
-
-If **public/images/captchas** does not exist, 100 captchas will be generated there when the application starts.
+A Google-style captcha generator for Rails.
 
 
 Install
 -------
 
-	gem install winton-captcha
+	script/plugin install git://github.com/winton/captcha.git
 
-### Add to environment.rb
+### Copy config/captcha.rb
 
-	config.gem 'winton-captcha', :lib => 'captcha', :source => 'http://gems.github.com'
+	rake captcha
+
+### Generate captchas
+	
+	rake captcha:generate
 
 ### Add to .gitignore
 
