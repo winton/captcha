@@ -9,7 +9,7 @@ Install
 
 	script/plugin install git://github.com/winton/captcha.git
 
-### Copy config/captcha.rb
+### Generate config/captcha.rb
 
 	rake captcha
 
