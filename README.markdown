@@ -13,6 +13,8 @@ Install
 
 	rake captcha
 
+Take a look at the config file.
+
 ### Generate captchas
 	
 	rake captcha:generate
