@@ -1,1 +1,1 @@
-require 'captcha'
+require 'capture'  # named capture.rb because of config/captcha.rb
