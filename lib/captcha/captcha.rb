@@ -42,7 +42,6 @@ class Captcha
       options = eval(File.read('config/captcha.rb'), bind)
     end
     
-    puts startup && !options[:generate_on_startup]
     return if startup && !options[:generate_on_startup]
 
     if options
