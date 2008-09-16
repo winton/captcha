@@ -47,7 +47,7 @@ class Captcha
     if options
       FileUtils.rm_rf options[:destination]
       FileUtils.mkdir_p options[:destination]
-      (1..10).each do |x|
+      (1..options[:count]).each do |x|
         c = Captcha.new options
         File.open("#{options[:destination]}/#{c.code}.jpg", 'w') do |f|
           f << c.image
