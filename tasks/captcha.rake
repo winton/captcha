@@ -16,17 +16,17 @@ namespace :captcha do
   namespace :config do
     desc 'Copies plugin resources to app'
     task :to_app do
-      captcha_resource 'captcha.rb', 'config/captcha.rb'
+      captcha_resource 'captchas.rb', 'config/captchas.rb'
     end
 
     desc 'Copies app resources to plugin'
     task :to_plugin do
-      captcha_resource 'captcha.rb', 'config/captcha.rb', true
+      captcha_resource 'captchas.rb', 'config/captchas.rb', true
     end
     
     desc 'Removes plugin resources from app'
     task :remove do
-      rm_rf 'config/captcha.rb'
+      rm_rf 'config/captchas.rb'
     end
   end
   

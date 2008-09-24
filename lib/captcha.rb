@@ -5,4 +5,4 @@ Dir[File.expand_path('*/*.rb', File.dirname(__FILE__))].each do |f|
 end
 
 ActionController::Base.send :include, CaptchaActions
-Captcha.generate binding, true
+CAPTCHAS = Captchas.new true

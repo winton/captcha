@@ -1,59 +1,85 @@
 require 'RMagick'
 
-class Captcha
+class Captchas
   
-  include Magick
-  attr_reader :code, :image
+  attr_reader :codes
   
-  def initialize(options)
-    @code = generate_code options
-    
-    canvas = Magick::ImageList.new
-    canvas.new_image(options[:width], options[:height]) { self.background_color = options[:colors][:background] }
-    
-    text = Magick::Draw.new
-    text.font = File.expand_path options[:ttf]
-    text.pointsize = options[:letters][:points]
-    
-    cur = 0
-    @code.each { |c|
-      text.annotate(canvas, 0, 0, cur, options[:letters][:baseline], c) { self.fill = options[:colors][:font] }
-      cur += options[:letters][:width]
-    }
-    
-    w = options[:wave][:wavelength]
-    canvas = canvas.wave(options[:wave][:amplitude], rand(w.last - w.first) + w.first)
-    canvas = canvas.implode(options[:implode])
-    
-    @code  = @code.to_s
-    @image = canvas.to_blob { self.format = "JPG" }
+  def initialize(startup=false)
+    @o = get_options
+    return unless @o
+    generate if !startup || @o[:generate_on_startup]
+    update_codes
   end
   
-  def generate_code(options)
-    chars = ('a'..'z').to_a - options[:letters][:ignore]
-    code_array = []
-    1.upto(options[:letters][:count]) { code_array << chars[rand(chars.length)] }
-    code_array
+  def options
+    @o
   end
   
-  def self.generate(bind, startup=false)
-    options = nil
-    if File.exists?('config/captcha.rb')
-      options = eval(File.read('config/captcha.rb'), bind)
-    end
+  def generate
+    FileUtils.rm_rf   @o[:destination]
+    FileUtils.mkdir_p @o[:destination]
     
-    return if startup && !options[:generate_on_startup]
-
-    if options
-      FileUtils.rm_rf options[:destination]
-      FileUtils.mkdir_p options[:destination]
-      (1..10).each do |x|
-        c = Captcha.new options
-        File.open("#{options[:destination]}/#{c.code}.jpg", 'w') do |f|
-          f << c.image
-        end
+    (1..@o[:count]).each do |x|
+      c = Captcha.new @o
+      File.open("#{@o[:destination]}/#{c.code}.jpg", 'w') do |f|
+        f << c.image
       end
-      GC.start
+    end
+    GC.start
+  end
+  
+  def update_codes
+    @codes = Dir["#{@o[:destination]}/*.jpg"].collect do |f|
+      File.basename f, '.jpg'
+    end
+  end
+  
+private
+
+  def get_options
+    if File.exists?('config/captchas.rb')
+      eval File.read('config/captchas.rb')
+    end
+  end
+  
+  class Captcha
+  
+    include Magick
+    attr_reader :code, :image
+  
+    def initialize(o)
+      @code = generate_code o
+    
+      canvas = Magick::ImageList.new
+      canvas.new_image(o[:width], o[:height]) {
+        self.background_color = o[:colors][:background]
+      }
+    
+      text = Magick::Draw.new
+      text.font = File.expand_path o[:ttf]
+      text.pointsize = o[:letters][:points]
+    
+      cur = 0
+      @code.each { |c|
+        text.annotate(canvas, 0, 0, cur, o[:letters][:baseline], c) {
+          self.fill = o[:colors][:font]
+        }
+        cur += o[:letters][:width]
+      }
+    
+      w = o[:wave][:wavelength]
+      canvas = canvas.wave(o[:wave][:amplitude], rand(w.last - w.first) + w.first)
+      canvas = canvas.implode(o[:implode])
+    
+      @code  = @code.to_s
+      @image = canvas.to_blob { self.format = "JPG" }
+    end
+  
+    def generate_code(o)
+      chars = ('a'..'z').to_a - o[:letters][:ignore]
+      code_array = []
+      1.upto(o[:letters][:count]) { code_array << chars[rand(chars.length)] }
+      code_array
     end
   end
 end

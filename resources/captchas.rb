@@ -15,10 +15,10 @@
   },
   :implode => 0.2,  # http://www.imagemagick.org/RMagick/doc/image2.html#implode
   :wave => {        # http://www.imagemagick.org/RMagick/doc/image3.html#wave
-    :wavelength => (40..60), # range is used for randomness (px)
+    :wavelength => (20..70), # range is used for randomness (px)
     :amplitude => 3          # distance between peak and valley of sin wave (px)
   },
   :generate_on_startup => RAILS_ENV == 'production',
-  :destination => 'public/images/captchas',
+  :destination => 'tmp/captchas',
   :ttf => 'vendor/plugins/captcha/resources/captcha.ttf'
 }
