@@ -49,7 +49,7 @@ private
   
     def initialize(o)
       @code = generate_code o
-    
+      
       canvas = Magick::ImageList.new
       canvas.new_image(o[:width], o[:height]) {
         self.background_color = o[:colors][:background]
