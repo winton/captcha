@@ -10,7 +10,7 @@ namespace :captcha do
   
   desc 'Generates captchas'
   task :generate do
-    Captcha.generate binding
+    Captchas.new
   end
   
   namespace :config do
