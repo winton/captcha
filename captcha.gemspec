@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name    = 'captcha'
-  s.version = '1.0.3'
-  s.date    = '2008-08-16'
+  s.version = '1.0.4'
+  s.date    = '2009-03-23'
   
-  s.summary     = "A simple captcha generator for Rails"
-  s.description = "A simple captcha generator for Rails"
+  s.summary     = "An Rmagick based, Google-style captcha generator"
+  s.description = "An Rmagick based, Google-style captcha generator"
   
   s.author   = 'Winton Welsh'
   s.email    = 'mail@wintoni.us'
@@ -12,11 +12,26 @@ Gem::Specification.new do |s|
   
   s.has_rdoc = false
   
-  s.files = Dir[*%w(
-    init.rb
-    lib/*
-    lib/**/*
+  # = MANIFEST =
+  s.files = %w[
     README.markdown
-    resources/*
-  )]
+    Rakefile
+    captcha.gemspec
+    init.rb
+    lib/captcha.rb
+    lib/captcha/action.rb
+    lib/captcha/actions.rb
+    lib/captcha/captcha.rb
+    lib/captcha/config.rb
+    lib/captcha/generator.rb
+    lib/captcha/image.rb
+    lib/captcha/routes.rb
+    resources/captcha.ttf
+    resources/captchas.rb
+    spec/lib/captcha_spec.rb
+    spec/spec.opts
+    spec/spec_helper.rb
+    tasks/captcha.rake
+  ]
+  # = MANIFEST =
 end
