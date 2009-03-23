@@ -1,46 +1,49 @@
 module Captcha
   class Config
+    
+    PRODUCTION = defined?(RAILS_ENV) && RAILS_ENV == 'production'
+    ROOT = defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : ''
+    
+    @@options = {
+      :colors => {
+        :background => '#1B1C20',
+        :font => '#7385C5'
+      },
+      # number of captcha images to generate
+      :count => PRODUCTION ? 500 : 10,
+      :destination => "#{ROOT}public/images/captchas",
+      :dimensions => {
+        # canvas height (px)
+        :height => 31,
+        # canvas width (px)
+        :width => 90
+      },
+      :generate_every => PRODUCTION ? 24 * 60 * 60 : 10 ** 8,
+      # http://www.imagemagick.org/RMagick/doc/image2.html#implode
+      :implode => 0.2,
+      :letters => {
+        # text baseline (px)
+        :baseline => 24,
+        # number of letters in captcha
+        :count => 6,
+        :ignore => ['a','e','i','o','u','l','j','q'],
+        # font size (pts)
+        :points => 34,
+        # width of a character (used to decrease or increase space between characters) (px)
+        :width => 14
+      },
+      :ttf => File.expand_path("#{File.dirname(__FILE__)}/../../resources/captcha.ttf"),
+      # http://www.imagemagick.org/RMagick/doc/image3.html#wave
+      :wave => {
+        # range is used for randomness (px)
+        :wavelength => (20..70),
+        # distance between peak and valley of sin wave (px)
+        :amplitude => 3
+      }
+    }
+    
     def initialize(options={})
-      @@options = {
-        :colors => {
-          :background => '#1B1C20',
-          :font => '#7385C5'
-        },
-        # number of captcha images to generate
-        :count => 500,
-        :destination => File.expand_path(
-          (defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : '') +
-          "public/images/captchas"
-        ),
-        :dimensions => {
-          # canvas height (px)
-          :height => 31,
-          # canvas width (px)
-          :width => 90
-        },
-        :generate_every => 24 * 60 * 60,
-        # http://www.imagemagick.org/RMagick/doc/image2.html#implode
-        :implode => 0.2,
-        :letters => {
-          # text baseline (px)
-          :baseline => 24,
-          # number of letters in captcha
-          :count => 6,
-          :ignore => ['a','e','i','o','u','l','j','q'],
-          # font size (pts)
-          :points => 34,
-          # width of a character (used to decrease or increase space between characters) (px)
-          :width => 14
-        },
-        :ttf => File.expand_path("#{File.dirname(__FILE__)}/../../resources/captcha.ttf"),
-        # http://www.imagemagick.org/RMagick/doc/image3.html#wave
-        :wave => {
-          # range is used for randomness (px)
-          :wavelength => (20..70),
-          # distance between peak and valley of sin wave (px)
-          :amplitude => 3
-        }
-      }.merge(options)
+      @@options.merge!(options)
     end
     
     def self.captchas_ordered_by_modified
