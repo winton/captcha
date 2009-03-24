@@ -1,7 +1,7 @@
 module Captcha
   class Config
     
-    PRODUCTION = defined?(RAILS_ENV) && RAILS_ENV == 'production'
+    PRODUCTION = defined?(RAILS_ENV) && RAILS_ENV == 'production' || RAILS_ENV == 'staging'
     ROOT = defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : ''
     
     @@options = {
