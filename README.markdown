@@ -78,7 +78,7 @@ model_instance.captcha = params[:captcha]
 Captchas will generate and re-generate automatically when a Rails instance starts. Captcha keeps the old batch of captchas around until the next re-generate so users do not get 404s.
 
 We used the following URLs in our view:
-* <code>/captcha</code> to retrieve the image
-* <code>/captcha/new</code> to grab a new image
+ * <code>/captcha</code> to retrieve the image 
+ * <code>/captcha/new</code> to grab a new image
 
 Use <code>session[:captcha]</code> to store, retrieve, and reset the captcha code.
