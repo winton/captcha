@@ -1,5 +1,5 @@
 require 'captcha'
-if File.exists?("#{RAILS_ROOT}/lib/captcha_config.rb")
+if defined?(RAILS_ROOT) && File.exists?("#{RAILS_ROOT}/lib/captcha_config.rb")
   require "#{RAILS_ROOT}/lib/captcha_config"
 end
 

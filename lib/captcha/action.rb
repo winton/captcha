@@ -13,7 +13,7 @@ module Captcha
 
     module InstanceMethods
       def new
-        files = Dir["#{Captcha::Config.options[:destination]}/*.jpg"]
+        files = Captcha::Config.newest_captchas
         session[:captcha] = File.basename(files[rand(files.length)], '.jpg')
         redirect_to(:action => :show)
       end

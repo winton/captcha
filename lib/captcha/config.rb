@@ -1,7 +1,8 @@
 module Captcha
   class Config
     
-    PRODUCTION = defined?(RAILS_ENV) && RAILS_ENV == 'production' || RAILS_ENV == 'staging'
+    PRODUCTION = defined?(RAILS_ENV) ?
+      RAILS_ENV == 'production' || RAILS_ENV == 'staging' : false
     ROOT = defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : ''
     
     @@options = {
@@ -59,6 +60,15 @@ module Captcha
     def self.codes
       self.captchas_ordered_by_modified.collect do |f|
         File.basename f, '.jpg'
+      end
+    end
+    
+    def self.newest_captchas
+      captchas = self.captchas_ordered_by_modified
+      if captchas
+        captchas[0..@@options[:count]-1]
+      else
+        []
       end
     end
   
