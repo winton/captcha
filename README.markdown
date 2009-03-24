@@ -62,7 +62,7 @@ The parameter is either the error added to the captcha input or nil to add a gen
 ### In your view
 
 <pre>
-<img src="/captcha?<%= Time.now.to_i %>" onclick="this.src = '/captcha/new?' + (new Date()).getTime()" />
+&lt;img src="/captcha?<%= Time.now.to_i %>" onclick="this.src = '/captcha/new?' + (new Date()).getTime()" /&gt;
 <%= text_field_tag(:captcha) %>
 </pre>
 
