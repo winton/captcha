@@ -13,43 +13,26 @@ Install
 
 <pre>
 {
+  # Captcha colors
   :colors => {
-    :background => '#1B1C20',
-    :font => '#7385C5'
+    :background => '#FFFFFF',
+    :font => '#080288'
   },
-  # number of captcha images to generate
-  :count => 500,
-  :destination => "#{RAILS_ROOT}/public/images/captchas"
-  ),
-  :dimensions => {
-    # canvas height (px)
-    :height => 31,
-    # canvas width (px)
-    :width => 90
-  },
-  :generate_every => 24 * 60 * 60,
-  # http://www.imagemagick.org/RMagick/doc/image2.html#implode
-  :implode => 0.2,
-  :letters => {
-    # text baseline (px)
-    :baseline => 24,
-    # number of letters in captcha
-    :count => 6,
-    :ignore => ['a','e','i','o','u','l','j','q'],
-    # font size (pts)
-    :points => 34,
-    # width of a character (used to decrease or increase space between characters) (px)
-    :width => 14
-  },
-  :ttf => File.expand_path("#{File.dirname(__FILE__)}/../../resources/captcha.ttf"),
-  # http://www.imagemagick.org/RMagick/doc/image3.html#wave
-  :wave => {
-    # range is used for randomness (px)
-    :wavelength => (20..70),
-    # distance between peak and valley of sin wave (px)
-    :amplitude => 3
-  }
+  # Number of captcha images to generate
+  :count => RAILS_ENV == 'production' ? 500 : 10,
+  # Where to write captchas
+  :destination => "#{RAILS_ROOT}/public/images/captchas",
+  # Generate new batch every day
+  :generate_every => RAILS_ENV == 'production' ? 24 * 60 * 60 : 10 ** 8
 }
+</pre>
+
+See <code>lib/captcha/config.rb</code> for more options.
+
+### Add public/images/captchas/* to your .gitignore file
+
+<pre>
+public/images/captchas/*
 </pre>
 
 ### Create a captcha controller
@@ -68,10 +51,34 @@ class CaptchasController < ApplicationController
 end
 </pre> 
 
-### Add public/images/captchas/* to your .gitignore
+### Add acts\_as\_captcha to your model
 
-  public/images/captchas/*
+<pre>
+acts_as_captcha "does not have the correct code"
+</pre>
 
-Captchas will generate and re-generate automatically (see the <code>generate_every</code> option).
+The parameter is either the error added to the captcha input or nil to add a generic error to base.
 
-Access <code>/captcha</code> to retrieve the image, <code>/captcha/new</code> to grab a new image, and <code>session[:captcha]</code> for the captcha code.
+### In your view
+
+<pre>
+<img src="/captcha?<%= Time.now.to_i %>" onclick="this.src = '/captcha/new?' + (new Date()).getTime()" />
+<%= text_field_tag(:captcha) %>
+</pre>
+
+### In your controller
+
+<pre>
+model_instance.known_captcha = session[:captcha]
+model_instance.captcha = params[:captcha]
+</pre>
+
+### More information
+
+Captchas will generate and re-generate automatically when a Rails instance starts. Captcha keeps the old batch of captchas around until the next re-generate so users do not get 404s.
+
+We used the following URLs in our view:
+* <code>/captcha</code> to retrieve the image
+* <code>/captcha/new</code> to grab a new image
+
+Use <code>session[:captcha]</code> to store, retrieve, and reset the captcha code.
