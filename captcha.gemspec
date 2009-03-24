@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name    = 'captcha'
-  s.version = '1.0.5'
-  s.date    = '2009-03-23'
+  s.version = '1.0.6'
+  s.date    = '2009-03-24'
   
   s.summary     = "An Rmagick based, Google-style captcha generator"
   s.description = "An Rmagick based, Google-style captcha generator"

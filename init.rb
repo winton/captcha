@@ -4,4 +4,5 @@ if File.exists?("#{RAILS_ROOT}/lib/captcha_config.rb")
 end
 
 ActionController::Base.send :include, Captcha::Action
+ActiveRecord::Base.send :include, Captcha::Model
 Captcha::Generator.new

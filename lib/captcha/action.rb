@@ -20,11 +20,9 @@ module Captcha
     
       def show
         new and return unless session[:captcha]
-        send_file(
-          "#{Captcha::Config.options[:destination]}/#{session[:captcha]}.jpg",
-          :disposition => 'inline',
-          :type => 'image/jpeg'
-        )
+        file = "#{Captcha::Config.options[:destination]}/#{session[:captcha]}.jpg"
+        new and return unless File.exists?(file)
+        send_file(file, :disposition => 'inline', :type => 'image/jpeg')
       end
     end
   
