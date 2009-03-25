@@ -9,8 +9,7 @@ module Captcha
     def initialize(o)
       @code = generate_code o
     
-      canvas = Magick::ImageList.new
-      canvas.new_image(o[:dimensions][:width], o[:dimensions][:height]) {
+      canvas = Magick::Image.new(o[:dimensions][:width], o[:dimensions][:height]) {
         self.background_color = o[:colors][:background]
       }
   
@@ -32,6 +31,7 @@ module Captcha
   
       @code  = @code.to_s
       @image = canvas.to_blob { self.format = "JPG" }
+      canvas.destroy!
     end
   
     private
