@@ -12,7 +12,7 @@ Install
 ### Create lib/captcha_config.rb (optional)
 
 <pre>
-{
+Captcha::Config.new(
   # Captcha colors
   :colors => {
     :background => '#FFFFFF',
@@ -24,7 +24,7 @@ Install
   :destination => "#{RAILS_ROOT}/public/images/captchas",
   # Generate new batch every day
   :generate_every => RAILS_ENV == 'production' ? 24 * 60 * 60 : 10 ** 8
-}
+)
 </pre>
 
 See <code>lib/captcha/config.rb</code> for more options.
