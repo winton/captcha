@@ -42,7 +42,7 @@ Captcha::Config.new(
 
 See <code>lib/captcha/config.rb</code> for more options.
 
-### Add acts\_as\_captcha to application_controller.rb
+### application_controller.rb
 
 <pre>
 class ApplicationController < ActionController::Base
@@ -52,7 +52,7 @@ end
 
 You may now use the <code>reset_captcha</code> method in any controller.
 
-### Add acts\_as\_captcha to your model
+### user.rb
 
 <pre>
 class User < ActiveRecord::Base
@@ -78,4 +78,5 @@ user = User.new
 user.known_captcha = session[:captcha]
 user.captcha = params[:captcha]
 user.save
+reset_captcha
 </pre>
