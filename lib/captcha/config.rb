@@ -6,6 +6,7 @@ module Captcha
     ROOT = defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : ''
     
     @@options = {
+      :password => 'captcha',
       :colors => {
         :background => '#FFFFFF',
         :font => '#080288'

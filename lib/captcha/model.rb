@@ -30,7 +30,7 @@ module Captcha
       
       def captcha_must_match_known_captcha
         return true if self.captcha.nil? || self.known_captcha.nil?
-        if self.captcha.strip.downcase != self.known_captcha.strip.downcase
+        if self.captcha.strip.downcase != Captcha::Cipher.decrypt(self.known_captcha)
           if self.captcha_validation_error.nil?
             self.errors.add_to_base("Enter the correct text in the image (6 characters)")
           else

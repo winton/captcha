@@ -7,22 +7,19 @@ module Captcha
 
     module ClassMethods
       def acts_as_captcha
-        include Captcha::Action::InstanceMethods
+        unless included_modules.include? InstanceMethods
+          include InstanceMethods 
+        end
+        before_filter :assign_captcha
       end
     end
 
     module InstanceMethods
-      def new
-        files = Captcha::Config.newest_captchas
-        session[:captcha] = File.basename(files[rand(files.length)], '.jpg')
-        redirect_to(:action => :show)
-      end
-    
-      def show
-        new and return unless session[:captcha]
-        file = "#{Captcha::Config.options[:destination]}/#{session[:captcha]}.jpg"
-        new and return unless File.exists?(file)
-        send_file(file, :disposition => 'inline', :type => 'image/jpeg')
+      def assign_captcha
+        unless session[:captcha]
+          files = Captcha::Config.newest_captchas
+          session[:captcha] = File.basename(files[rand(files.length)], '.jpg')
+        end
       end
     end
   

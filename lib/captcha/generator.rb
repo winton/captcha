@@ -10,7 +10,7 @@ module Captcha
       FileUtils.mkdir_p Config.options[:destination]
       (1..Config.options[:count]).each do |x|
         c = Image.new Config.options
-        File.open("#{Config.options[:destination]}/#{c.code}.jpg", 'w') do |f|
+        File.open("#{Config.options[:destination]}/#{Cipher.encrypt(c.code)}.jpg", 'w') do |f|
           f << c.image
         end
       end
