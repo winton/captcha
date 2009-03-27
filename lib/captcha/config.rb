@@ -10,8 +10,11 @@ module Captcha
     end
     ONE_DAY = 24 * 60 * 60
     
-    @@exists = {}
-    @@exists_since = Time.now
+    @@caches = {
+      :captchas => [],
+      :exists => {},
+      :last_expired => Time.now
+    }
     @@options = {
       :password => 'captcha',
       :colors => {
@@ -56,7 +59,11 @@ module Captcha
     end
     
     def self.captchas
-      Dir["#{@@options[:destination]}/*.jpg"]
+      self.expire! if self.expire?
+      if @@caches[:captchas].empty?
+        @@caches[:captchas] = Dir["#{@@options[:destination]}/*.jpg"]
+      end
+      @@caches[:captchas]
     end
     
     def self.codes
@@ -66,14 +73,23 @@ module Captcha
     end
     
     def self.exists?(code)
-      if Time.now - @@exists_since > 60 * 60
-        @@exists = {}
-        @@exists_since = Time.now
-      end
-      unless @@exists[code]
-        @@exists[code] = File.exists?("#{@@options[:destination]}/#{code}.jpg")
+      self.expire! if self.expire?
+      unless @@caches[:exists][code]
+        @@caches[:exists][code] = File.exists?("#{@@options[:destination]}/#{code}.jpg")
       end
       @@exists[code]
+    end
+    
+    def self.expire?
+      Time.now - @@caches[:last_expired] > 60 * 60
+    end
+    
+    def self.expire!
+      @@caches = {
+        :captchas => [],
+        :exists => {},
+        :last_expired => Time.now
+      }
     end
   
     def self.options
@@ -82,7 +98,7 @@ module Captcha
   
     def self.last_modified
       file = self.captchas.first
-      if file
+      if file && File.exists?(file)
         File.mtime(file)
       else
         nil

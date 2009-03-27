@@ -20,6 +20,7 @@ module Captcha
           f << image.data
         end
       end
+      Config.expire!
       GC.start
     end
   end
