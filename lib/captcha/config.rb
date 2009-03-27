@@ -77,7 +77,7 @@ module Captcha
       unless @@caches[:exists][code]
         @@caches[:exists][code] = File.exists?("#{@@options[:destination]}/#{code}.jpg")
       end
-      @@exists[code]
+      @@caches[:exists][code]
     end
     
     def self.expire?
