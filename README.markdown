@@ -7,8 +7,7 @@ Goals
 -----
 
 * Batch generate captchas
-* Use ciphered filenames (no need to store filename/captcha code pairs)
-* Captchas refresh automatically
+* Use ciphered filenames (no need to store filename/captcha pairs)
 * Easy configuration
   * Number of captchas
   * Period for captcha refresh
@@ -62,7 +61,7 @@ end
 
 With no parameters, a default error is added to the "captcha" field (<code>:field => true</code>).
 
-Use <code>:base => true</code> to activate a default error for base.
+Specify <code>:base => true</code> to use a default error for base.
 
 ### In your view
 
@@ -80,3 +79,11 @@ user.captcha = params[:captcha]
 user.save
 reset_captcha
 </pre>
+
+### crontab
+
+<pre>
+0 0 * * * cd /path/to/rails/app && /usr/bin/rake RAILS_ENV=production captcha:generate
+</pre>
+
+Your config file sets the captcha refresh period. The rake task just checks if its time to repopulate, and does so if necessary.

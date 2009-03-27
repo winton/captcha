@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = 'captcha'
-  s.version = '1.2.0'
+  s.version = '1.2.1'
   s.date    = '2009-03-27'
   
   s.summary     = "A Google-style captcha for enterprise Rails apps"
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
     spec/lib/captcha_spec.rb
     spec/spec.opts
     spec/spec_helper.rb
+    tasks/captcha.rake
   ]
   # = MANIFEST =
 end
