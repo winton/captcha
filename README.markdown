@@ -42,12 +42,6 @@ Captcha::Config.new(
 
 See <code>lib/captcha/config.rb</code> for more options.
 
-### Add public/images/captchas/* to your .gitignore file
-
-<pre>
-public/images/captchas/*
-</pre>
-
 ### Add acts\_as\_captcha to application_controller.rb
 
 <pre>
