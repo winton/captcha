@@ -5,4 +5,3 @@ end
 
 ActionController::Base.send :include, Captcha::Action
 ActiveRecord::Base.send :include, Captcha::Model
-Captcha::Generator.new
