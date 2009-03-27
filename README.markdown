@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
 end
 </pre>
 
-With no parameters, a default error is added to the "captcha" field.
+With no parameters, a default error is added to the "captcha" field (<code>:field => true</code>).
 
 Use <code>:base => true</code> to activate a default error for base.
 
