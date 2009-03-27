@@ -10,9 +10,9 @@ Goals
 * Use ciphered filenames (no need to store filename/captcha code pairs)
 * Captchas refresh automatically
 * Easy configuration
-* * Number of captchas
-* * Period for captcha refresh
-* * Colors, wave, implode
+  * Number of captchas
+  * Period for captcha refresh
+  * Colors, wave, implode
 * Handle lots of users
 
 Install
