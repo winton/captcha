@@ -23,6 +23,12 @@ describe :captcha do
     @generator.generate
     codes.should_not == Captcha::Config.codes
   end
+  it "should not regenerate before the files are older than the generate_every option" do
+    codes = Captcha::Config.codes
+    sleep 1
+    @generator.generate
+    codes.should == Captcha::Config.codes
+  end
   it "should not allow more than the captcha limit to exist" do
     sleep @delay
     @generator.generate
