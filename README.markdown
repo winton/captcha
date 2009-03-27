@@ -1,8 +1,19 @@
 captcha
 =======
 
-An Rmagick based, Google-style captcha generator.
+A Google-style captcha for enterprise Rails apps
 
+Goals
+-----
+
+* Batch generate captchas
+* Use ciphered filenames (no need to store filename/captcha code pairs)
+* Captchas refresh automatically
+* Easy configuration
+** Number of captchas
+** Period for captcha refresh
+** Colors, wave, implode
+* Handle lots of users
 
 Install
 -------
@@ -13,6 +24,8 @@ Install
 
 <pre>
 Captcha::Config.new(
+  # Used for filename cipher
+  :password => 'something-unique',
   # Captcha colors
   :colors => {
     :background => '#FFFFFF',
@@ -23,7 +36,7 @@ Captcha::Config.new(
   # Where to write captchas
   :destination => "#{RAILS_ROOT}/public/images/captchas",
   # Generate new batch every day
-  :generate_every => RAILS_ENV == 'production' ? 24 * 60 * 60 : 10 ** 8
+  :generate_every => 24 * 60 * 60
 )
 </pre>
 
@@ -35,51 +48,40 @@ See <code>lib/captcha/config.rb</code> for more options.
 public/images/captchas/*
 </pre>
 
-### Create a captcha controller
-	
-	script/generate controller Captchas
-
-### Add the resource to your routes.rb
-
-	map.resource :captcha
-
-### Add acts\_as\_captcha to captchas_controller.rb
+### Add acts\_as\_captcha to application_controller.rb
 
 <pre>
-class CaptchasController < ApplicationController
+class ApplicationController < ActionController::Base
   acts_as_captcha
 end
-</pre> 
+</pre>
+
+You may now use the <code>reset_captcha</code> method in any controller.
 
 ### Add acts\_as\_captcha to your model
 
 <pre>
-acts_as_captcha "does not have the correct code"
+class User < ActiveRecord::Base
+  acts_as_captcha :base => "base error when captcha fails", :field => "field error when captcha fails"
+end
 </pre>
 
-The parameter is either the error added to the captcha input or nil to add a generic error to base.
+No parameters behaves like <code>:field => true</code>, a default error is added to the "captcha" field.
+
+Use <code>:base => true</code> to activate a default error for base.
 
 ### In your view
 
 <pre>
-&lt;img src="/captcha?<%= Time.now.to_i %>" onclick="this.src = '/captcha/new?' + (new Date()).getTime()" /&gt;
+&lt;img src="/images/captchas/<%= session[:captcha] %>.jpg" /&gt;
 <%= text_field_tag(:captcha) %>
 </pre>
 
 ### In your controller
 
 <pre>
-model_instance.known_captcha = session[:captcha]
-model_instance.captcha = params[:captcha]
+user = User.new
+user.known_captcha = session[:captcha]
+user.captcha = params[:captcha]
+user.save
 </pre>
-
-### More information
-
-Captchas will generate and re-generate automatically when a Rails instance starts. Captcha keeps the old batch of captchas around until the next re-generate so users do not get 404s.
-
-We used the following URLs in our view:
-
-* <code>/captcha</code> to retrieve the image 
-* <code>/captcha/new</code> to grab a new image
-
-Use <code>session[:captcha]</code> to store, retrieve, and reset the captcha code.

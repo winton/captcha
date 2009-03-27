@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name    = 'captcha'
-  s.version = '1.1.0'
-  s.date    = '2009-03-24'
+  s.version = '1.2.0'
+  s.date    = '2009-03-27'
   
-  s.summary     = "An Rmagick based, Google-style captcha generator"
-  s.description = "An Rmagick based, Google-style captcha generator"
+  s.summary     = "A Google-style captcha for enterprise Rails apps"
+  s.description = "A Google-style captcha for enterprise Rails apps"
   
   s.author   = 'Winton Welsh'
   s.email    = 'mail@wintoni.us'
@@ -14,24 +14,22 @@ Gem::Specification.new do |s|
   
   # = MANIFEST =
   s.files = %w[
+    MIT-LICENSE
     README.markdown
     Rakefile
     captcha.gemspec
     init.rb
     lib/captcha.rb
     lib/captcha/action.rb
-    lib/captcha/actions.rb
-    lib/captcha/captcha.rb
+    lib/captcha/cipher.rb
     lib/captcha/config.rb
     lib/captcha/generator.rb
     lib/captcha/image.rb
-    lib/captcha/routes.rb
+    lib/captcha/model.rb
     resources/captcha.ttf
-    resources/captchas.rb
     spec/lib/captcha_spec.rb
     spec/spec.opts
     spec/spec_helper.rb
-    tasks/captcha.rake
   ]
   # = MANIFEST =
 end

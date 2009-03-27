@@ -15,11 +15,18 @@ module Captcha
     end
 
     module InstanceMethods
+      private
+      
       def assign_captcha
-        unless session[:captcha]
-          files = Captcha::Config.newest_captchas
+        unless session[:captcha] && Captcha::Config.exists?(session[:captcha])
+          files = Captcha::Config.captchas
           session[:captcha] = File.basename(files[rand(files.length)], '.jpg')
         end
+      end
+      
+      def reset_captcha
+        session[:captcha] = nil
+        assign_captcha
       end
     end
   

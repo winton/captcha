@@ -1,10 +1,17 @@
 module Captcha
   class Config
     
-    PRODUCTION = defined?(RAILS_ENV) ?
-      RAILS_ENV == 'production' || RAILS_ENV == 'staging' : false
-    ROOT = defined?(RAILS_ROOT) ? "#{RAILS_ROOT}/" : ''
+    if defined?(RAILS_ENV)
+      PRODUCTION = RAILS_ENV == 'production' || RAILS_ENV == 'staging'
+      ROOT = "#{RAILS_ROOT}/"
+    else
+      PRODUCTION = false
+      ROOT = ""
+    end
+    ONE_DAY = 24 * 60 * 60
     
+    @@exists = {}
+    @@exists_since = Time.now
     @@options = {
       :password => 'captcha',
       :colors => {
@@ -20,7 +27,7 @@ module Captcha
         # canvas width (px)
         :width => 110
       },
-      :generate_every => PRODUCTION ? 24 * 60 * 60 : 10 ** 8,
+      :generate_every => PRODUCTION ? ONE_DAY * 1 : ONE_DAY * 10000,
       # http://www.imagemagick.org/RMagick/doc/image2.html#implode
       :implode => 0.2,
       :letters => {
@@ -28,7 +35,7 @@ module Captcha
         :baseline => 25,
         # number of letters in captcha
         :count => 6,
-        :ignore => ['a','e','i','o','u','l','j','q'],
+        :ignore => ['a','e','i','o','u','l','j','q','v'],
         # font size (pts)
         :points => 38,
         # width of a character (used to decrease or increase space between characters) (px)
@@ -48,29 +55,25 @@ module Captcha
       @@options.merge!(options)
     end
     
-    def self.captchas_ordered_by_modified
-      return unless @@options
-      files_modified = Dir["#{@@options[:destination]}/*.jpg"].collect do |file|
-        [ file, File.mtime(file) ]
-      end
-      # Youngest to oldest
-      files_modified.sort! { |a, b| b[1] <=> a[1] }
-      files_modified.collect { |f| f[0] }
+    def self.captchas
+      Dir["#{@@options[:destination]}/*.jpg"]
     end
-  
+    
     def self.codes
-      self.captchas_ordered_by_modified.collect do |f|
+      self.captchas.collect do |f|
         File.basename f, '.jpg'
       end
     end
     
-    def self.newest_captchas
-      captchas = self.captchas_ordered_by_modified
-      if captchas
-        captchas[0..@@options[:count]-1]
-      else
-        []
+    def self.exists?(code)
+      if Time.now - @@exists_since > 60 * 60
+        @@exists = {}
+        @@exists_since = Time.now
       end
+      unless @@exists[code]
+        @@exists[code] = File.exists?("#{@@options[:destination]}/#{code}.jpg")
+      end
+      @@exists[code]
     end
   
     def self.options
@@ -78,8 +81,12 @@ module Captcha
     end
   
     def self.last_modified
-      youngest = self.captchas_ordered_by_modified.first
-      youngest ? File.mtime(youngest) : nil
+      file = self.captchas.first
+      if file
+        File.mtime(file)
+      else
+        nil
+      end
     end
   end
 end
