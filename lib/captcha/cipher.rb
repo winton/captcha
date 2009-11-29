@@ -16,8 +16,12 @@ module Captcha
       encrypted << cipher.final
       # Turn into chr codes separated by underscores
       # 135_14_163_53_43_135_172_31_1_23_169_81_49_110_49_230
-      encrypted = (0..encrypted.length-1).collect do |x|
-        encrypted[x]
+      if encrypted.respond_to?(:codepoints)
+        encrypted = encrypted.codepoints.to_a
+      else
+        encrypted = (0..encrypted.length-1).collect do |x|
+          encrypted[x]
+        end
       end
       encrypted.join('_')
     end
